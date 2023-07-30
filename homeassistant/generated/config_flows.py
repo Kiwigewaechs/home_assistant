@@ -360,6 +360,7 @@ FLOWS = {
         "pvoutput",
         "pvpc_hourly_pricing",
         "qbittorrent",
+        "qcells_inverter",
         "qingping",
         "qnap",
         "qnap_qsw",

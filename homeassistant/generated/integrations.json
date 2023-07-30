@@ -4386,6 +4386,12 @@
       "config_flow": true,
       "iot_class": "local_polling"
     },
+    "qcells_inverter": {
+      "name": "QCells Inverter",
+      "integration_type": "hub",
+      "config_flow": true,
+      "iot_class": "local_polling"
+    },
     "qingping": {
       "name": "Qingping",
       "integration_type": "hub",

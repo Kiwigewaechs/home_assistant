@@ -1,0 +1,13 @@
+{
+  "domain": "qcells_inverter",
+  "name": "QCells Inverter",
+  "codeowners": ["@Kiwigewaechs"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/qcells_inverter",
+  "homekit": {},
+  "iot_class": "local_polling",
+  "requirements": ["requests==2.31"],
+  "ssdp": [],
+  "zeroconf": []
+}
