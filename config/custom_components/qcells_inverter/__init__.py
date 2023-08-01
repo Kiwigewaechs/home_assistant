@@ -16,15 +16,24 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up QCells Inverter from a config entry."""
 
     hass.data.setdefault(DOMAIN, {})
-    hub = QCellsInverterConnector(entry.data["host"], entry.data["password"], hass)
-
-    if not hub.IsAuthenticated()["authenticated"]:
+    api = QCellsInverterConnector(entry.data["host"], entry.data["password"], hass)
+    authentication = await api.IsAuthenticated()
+    if not authentication["authenticated"]:
         raise ConfigEntryAuthFailed
-    hass.data[DOMAIN][entry.entry_id] = hub
+    hass.data[DOMAIN][entry.entry_id] = api
+
+    # update listener which reacts on updates in the option flow:
+    entry.async_on_unload(entry.add_update_listener(qcells_update_listener))
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
+
+
+async def qcells_update_listener(hass: HomeAssistant, entry: ConfigEntry):
+    """Trigger that when an entry was updated by the options flow."""
+    entry.data = entry.data | entry.options
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

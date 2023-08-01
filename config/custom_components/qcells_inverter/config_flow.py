@@ -36,6 +36,7 @@ class QCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         :param user_input: The user_input from a form; type is a dictionary.
         """
         errors: dict[str, str] = {}
+        info = {}
         try:
             info = await validate_input(self.hass, user_input)
         except CannotConnect:
