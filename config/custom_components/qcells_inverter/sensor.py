@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from .api import QCellsInverterConnector
 from .api_poller import ApiPoller
 from .const import DOMAIN
 
@@ -18,8 +19,8 @@ async def async_setup_entry(
 ) -> None:
     """Config entry example."""
     # assuming API object stored here by __init__.py
-    inverter_api = hass.data[DOMAIN][entry.entry_id]
-    coordinator = ApiPoller(hass, inverter_api)
+    inverter_api: QCellsInverterConnector = hass.data[DOMAIN][entry.entry_id]
+    coordinator = ApiPoller(hass, inverter_api, entry.data["interval"])
 
     # Fetch initial data so we have data when entities subscribe
     #

@@ -8,6 +8,7 @@ from homeassistant.config_entries import ConfigEntry, OptionsFlow
 from homeassistant.data_entry_flow import FlowResult
 
 from .api import CannotConnect, InvalidAuth, validate_input
+from .const import MIN_POLLING_INTERVAL
 
 
 class OptionsFlowHandler(OptionsFlow):
@@ -51,6 +52,9 @@ class OptionsFlowHandler(OptionsFlow):
                 vol.Required(
                     "password", default=self.config_entry.data.get("password")
                 ): str,
+                vol.Required(
+                    "interval", default=self.config_entry.data.get("interval")
+                ): vol.All(int, vol.Range(min=MIN_POLLING_INTERVAL)),
             }
         )
 

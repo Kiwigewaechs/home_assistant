@@ -7,7 +7,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
 
-class InverterConnector:
+class QCellsInverterConnector:
     """Connects to the inverter and calls its API."""
 
     def __init__(self, host: str, password: str, hass: HomeAssistant) -> None:
@@ -59,7 +59,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #     your_validate_func, data["username"], data["password"]
     # )
 
-    hub = InverterConnector(data["host"], data["password"], hass)
+    hub = QCellsInverterConnector(data["host"], data["password"], hass)
 
     auth_result = await hub.IsAuthenticated()
 

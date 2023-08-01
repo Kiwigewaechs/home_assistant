@@ -1,0 +1,47 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Gerät ist bereits eingebunden",
+      "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+    },
+    "error": {
+      "cannot_connect": "es konnte keine Verbindung hergestellt werden",
+      "invalid_auth": "Authentifizierung fehlgeschlagen",
+      "unknown": "Ein unerwarteter Fehler trat auf"
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "host": "Host",
+          "password": "Passwort",
+          "interval": "Api-Abrufintervall"
+        },
+        "description": "Authentifizierung erneuern"
+      },
+      "user": {
+        "data": {
+          "host": "Host",
+          "password": "Passwort",
+          "interval": "Api-Abrufintervall"
+        }
+      }
+    }
+  },
+  "options": {
+    "error": {
+      "cannot_connect": "es konnte keine Verbindung hergestellt werden",
+      "invalid_auth": "Authentifizierung fehlgeschlagen",
+      "unknown": "Ein unerwarteter Fehler trat auf"
+    },
+    "step": {
+      "init": {
+        "data": {
+          "host": "Host",
+          "password": "Passwort",
+          "interval": "Api-Abrufintervall"
+        },
+        "description": "Einstellungen des QCells Wechselrichters anpassen"
+      }
+    }
+  }
+}

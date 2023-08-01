@@ -5,9 +5,9 @@ import logging
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import InverterConnector
+from .api import QCellsInverterConnector
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -15,10 +15,13 @@ _LOGGER = logging.getLogger(__name__)
 class ApiPoller(DataUpdateCoordinator):
     """Polls the Qcell inverters local api."""
 
-    def __init__(self, hass: HomeAssistant, inverter_api: InverterConnector) -> None:
+    def __init__(
+        self, hass: HomeAssistant, inverter_api: QCellsInverterConnector, interval: int
+    ) -> None:
         """Initialize the poller.
 
         :param hass: the home assistant instance
+        :param interval: the polling interval
         :param inverter_api: Instance of object which knows about the inverters api and may poll it.
         """
         super().__init__(
@@ -27,9 +30,12 @@ class ApiPoller(DataUpdateCoordinator):
             # Name of the data. For logging purposes.
             name=f"QCellsInverterPoller [{inverter_api.host}]",
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=5),
+            update_interval=timedelta(seconds=interval),
         )
         self.inverter_api = inverter_api
+        self.num_polls = 0
+        self.failed_polls = 0
+        self.maximally_allowd_fails = 10
 
     async def _async_update_data(self):
         """Fetch data from API endpoint.
@@ -39,6 +45,8 @@ class ApiPoller(DataUpdateCoordinator):
         """
         try:
             data_dict = await self.inverter_api.request_data(10)
+            self.num_polls += 1
+            self.failed_polls = 0
             return data_dict
 
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
@@ -51,8 +59,15 @@ class ApiPoller(DataUpdateCoordinator):
             #    return await self.my_api.fetch_data(listening_idx)
 
         except OSError as err:
-            # Raising ConfigEntryAuthFailed will cancel future updates
-            # and start a config flow with SOURCE_REAUTH (async_step_reauth)
-            raise ConfigEntryAuthFailed from err
-        # except ApiError as err:
-        #     raise UpdateFailed(f"Error communicating with API: {err}")
+            self.failed_polls += 1
+            successful_polls = self.num_polls
+            self.num_polls = 0
+
+            if self.failed_polls < self.maximally_allowd_fails:
+                raise UpdateFailed(
+                    f"polling failed after {successful_polls} successful polls."
+                ) from OSError
+            else:
+                # Raising ConfigEntryAuthFailed will cancel future updates
+                # and start a config flow with SOURCE_REAUTH (async_step_reauth)
+                raise ConfigEntryAuthFailed(f"num of tries: {self.num_polls}") from err
