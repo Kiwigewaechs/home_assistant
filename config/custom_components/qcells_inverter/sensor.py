@@ -493,7 +493,7 @@ class QCellsSensorConfigFactory:
     """Use this class as a factory to generate QCell sensors. It knows about the generic properties of the complete integration devices."""
 
     def __init__(self, coordinator: ApiPoller, sn: str, sw_version: str) -> None:
-        """Initialize the factory.
+        """Initialize the factory used to generate new QCells sensors.
 
         :param coordinator: The class used to poll new data
         :param sn: serial number
